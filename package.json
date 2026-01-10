@@ -12,8 +12,12 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.514.0",
+<<<<<<< HEAD
     "next": "15.3.3",
     "ogl": "^1.0.11",
+=======
+    "next": "15.3.8",
+>>>>>>> 5ebe5f6787821d8243f64e3730a94eba04c813b1
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.4.0"
