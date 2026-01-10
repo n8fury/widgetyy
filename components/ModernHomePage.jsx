@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import PrismaticBurst from './PrismaticBurst';
 
 const GitHubStarButton = () => {
   const [starCount, setStarCount] = useState(0);
@@ -51,13 +52,13 @@ const GitHubStarButton = () => {
     <div className="fixed top-6 right-6 z-50">
       <button
         onClick={handleStarClick}
-        className="group flex items-center space-x-2 bg-white border border-gray-200 rounded-full px-4 py-2 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 shadow-sm hover:shadow-md"
+        className="group flex items-center space-x-2 rounded-full px-4 py-2 transition-colors duration-300 bg-white/10 border border-white/20 backdrop-blur-xl hover:bg-white/20"
       >
-        <Star className="w-4 h-4 text-yellow-500 group-hover:text-yellow-600 transition-colors" />
-        <span className="text-gray-700 text-sm font-medium">
+        <Star className="w-4 h-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
+        <span className="text-white text-sm font-medium">
           {isLoading ? '...' : starCount.toLocaleString()}
         </span>
-        <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-gray-500 transition-colors" />
+        <ExternalLink className="w-3 h-3 text-white/70 group-hover:text-white/90 transition-colors" />
       </button>
     </div>
   );
@@ -70,7 +71,7 @@ const Diamond = ({ filled }) => {
       <img
         src={filled ? '/assets/fill.svg' : '/assets/empty.svg'}
         alt={filled ? 'filled' : 'empty'}
-        className="w-full h-full"
+        className={`w-full h-full ${filled ? 'invert' : 'opacity-70'}`}
       />
     </div>
   );
@@ -83,19 +84,17 @@ const WidgetCard = ({ title, description, href, icon: Icon, progress = 0 }) => {
 
   return (
     <Link href={href} className="group block">
-      <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 h-80 w-72 flex flex-col">
+      <div className="rounded-2xl p-6 shadow-lg transition-colors duration-300 border h-80 w-72 flex flex-col bg-white/10 border-white/20 backdrop-blur-xl">
         {/* Header / Copy */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-gray-50 rounded-xl group-hover:bg-gray-100 transition-colors">
-              <Icon className="w-6 h-6 text-gray-600" />
+            <div className="p-3 rounded-xl transition-colors bg-white/10 border border-white/15">
+              <Icon className="w-6 h-6 text-white" />
             </div>
-            <div className="text-2xl font-bold text-gray-800">{progress}%</div>
+            <div className="text-2xl font-bold text-white">{progress}%</div>
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-gray-900 transition-colors">
-            {title}
-          </h3>
-          <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+          <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
+          <p className="text-white/90 text-sm leading-relaxed">{description}</p>
         </div>
 
         {/* Diamonds - vertically centered */}
@@ -108,7 +107,7 @@ const WidgetCard = ({ title, description, href, icon: Icon, progress = 0 }) => {
         </div>
 
         {/* Live updates */}
-        <div className="flex items-center justify-center text-xs text-gray-400">
+        <div className="flex items-center justify-center text-xs text-white/80">
           <div className="flex items-center">
             <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse mr-1"></div>
             <span>Live updates</span>
@@ -170,28 +169,35 @@ const ModernHomePage = () => {
   }, [isAutoPlaying]);
 
   return (
-    <div className="min-h-screen bg-gray-100 relative flex flex-col">
+    <div className="min-h-screen relative flex flex-col overflow-hidden text-white">
+      <div className="absolute inset-0 -z-20 pointer-events-none">
+        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+          <PrismaticBurst speed={0.65} distort={5} hoverDampness={0.08} />
+        </div>
+      </div>
       {/* GitHub Star Button */}
       <GitHubStarButton />
 
       <div className="container mx-auto px-6 py-12 flex-1 flex flex-col">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-6xl md:text-7xl font-black text-gray-800 mb-6 tracking-tight">
-            Widgetyy
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Beautiful progress trackers for your daily, monthly, yearly goals
-            and custom deadlines.
-            <span className="text-gray-800 font-medium">
-              {' '}
-              Stay motivated, stay focused.
-            </span>
-          </p>
+          <div className="inline-block rounded-3xl px-8 py-6 bg-white/10 border border-white/20 backdrop-blur-xl">
+            <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
+              Widgetyy
+            </h1>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed ">
+              Beautiful progress trackers for your daily, monthly, yearly goals
+              and custom deadlines.
+              <span className="text-white font-medium">
+                {' '}
+                Stay motivated, stay focused.
+              </span>
+            </p>
+          </div>
         </div>
 
         {/* Slider Container - Centered vertically */}
-        <div className="relative max-w-6xl mx-auto overflow-hidden flex-1 flex flex-col justify-center">
+        <div className="relative max-w-6xl mx-auto overflow-hidden flex-1 flex flex-col justify-center ">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -208,28 +214,28 @@ const ModernHomePage = () => {
           {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 transition-all duration-300 group shadow-sm hover:shadow-md"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 rounded-full p-3 transition-all duration-300 group shadow-sm hover:shadow-md bg-white/10 border border-white/20 backdrop-blur-xl hover:bg-white/20"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-600 group-hover:scale-110 transition-transform" />
+            <ChevronLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 transition-all duration-300 group shadow-sm hover:shadow-md"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-3 transition-all duration-300 group shadow-sm hover:shadow-md bg-white/10 border border-white/20 backdrop-blur-xl hover:bg-white/20"
           >
-            <ChevronRight className="w-6 h-6 text-gray-600 group-hover:scale-110 transition-transform" />
+            <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
           </button>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center mt-12 py-2 space-x-3">
+          <div className="flex justify-center mt-12 py-2 space-x-3 ">
             {widgets.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? 'bg-gray-800 scale-125'
-                    : 'bg-gray-300 hover:bg-gray-400'
+                    ? 'bg-white scale-125'
+                    : 'bg-white/40 hover:bg-white/60 backdrop-blur-xl'
                 }`}
                 style={{ aspectRatio: '1/1' }}
               />
@@ -240,7 +246,7 @@ const ModernHomePage = () => {
 
       {/* Bottom Footer - Live Updates */}
       <div className="text-center mt-auto pb-6">
-        <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
+        <div className="inline-flex items-center space-x-2 text-white/90 text-sm rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-xl">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           <span>Live updates every minute</span>
         </div>
