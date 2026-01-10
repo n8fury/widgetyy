@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import PrismaticBurst from './PrismaticBurst';
+import Iridescence from './Iridescence';
 
 const GitHubStarButton = () => {
   const [starCount, setStarCount] = useState(0);
@@ -171,9 +171,13 @@ const ModernHomePage = () => {
   return (
     <div className="min-h-screen relative flex flex-col overflow-hidden text-white">
       <div className="absolute inset-0 -z-20 pointer-events-none">
-        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-          <PrismaticBurst speed={0.65} distort={5} hoverDampness={0.08} />
-        </div>
+        <Iridescence
+          color={[0.5, 0.6, 0.8]}
+          mouseReact={false}
+          speed={2}
+          amplitude={0.12}
+          className="w-full h-full"
+        />
       </div>
       {/* GitHub Star Button */}
       <GitHubStarButton />
