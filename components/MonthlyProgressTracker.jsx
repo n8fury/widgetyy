@@ -71,20 +71,20 @@ const MonthlyProgressTracker = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-2xl p-12 shadow-lg max-w-2xl w-full mx-4">
+      <div className="bg-white rounded-2xl p-12 shadow-lg max-w-2xl w-full mx-4 h-[342px] flex flex-col">
         {/* Top Row */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <div className="text-sm font-medium text-gray-600">This Month</div>
           <div className="text-4xl font-bold text-gray-800">{progress}%</div>
         </div>
 
         {/* Middle - Diamonds */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center items-center flex-1">
           <div className="grid grid-cols-10 gap-5">{diamonds}</div>
         </div>
 
         {/* Bottom Row */}
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-center mt-4">
           <div className="text-xs text-gray-500">{monthName}</div>
           <div></div>
           <div className="flex items-center text-xs text-gray-400">

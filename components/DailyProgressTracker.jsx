@@ -76,10 +76,17 @@ const DailyProgressTracker = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white rounded-2xl p-8 shadow-lg w-[480px]">
-        {/* Top row: Today (left) and Percentage (right) */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="text-sm font-medium text-gray-600">Today</div>
-          <div className="text-4xl font-bold text-gray-800">{progress}%</div>
+        {/* Top row: Today (left), Date (center), Percentage (right) */}
+        <div className="grid grid-cols-3 items-center mb-8">
+          <div className="flex items-center h-full text-sm font-medium text-gray-600 justify-self-start">
+            Today
+          </div>
+          <div className="flex items-center h-full text-xs font-medium text-gray-500  justify-center whitespace-nowrap">
+            {dateString}
+          </div>
+          <div className="flex items-center h-full text-4xl font-bold text-gray-800 justify-self-end justify-end">
+            {progress}%
+          </div>
         </div>
 
         {/* Middle: Diamonds with maximum space */}
@@ -87,17 +94,15 @@ const DailyProgressTracker = () => {
           {diamonds}
         </div>
 
-        {/* Bottom row: Day (left), Time with dot (center), Date (right) */}
+        {/* Bottom row: Day (left), Clock with dot (right) */}
         <div className="grid grid-cols-3 items-center text-xs">
           <div className="text-gray-500 justify-self-start whitespace-nowrap">
             {dayName}
           </div>
-          <div className="flex items-center text-gray-400 justify-self-center whitespace-nowrap">
+          <div></div>
+          <div className="flex items-center text-gray-400 justify-self-end whitespace-nowrap">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
             {currentTime}
-          </div>
-          <div className="text-gray-500 justify-self-end whitespace-nowrap">
-            {dateString}
           </div>
         </div>
       </div>
