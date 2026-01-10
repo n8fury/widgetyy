@@ -184,13 +184,13 @@ const ModernHomePage = () => {
   }, [isAutoPlaying]);
 
   return (
-    <div className="min-h-screen bg-gray-100 relative">
+    <div className="min-h-screen bg-gray-100 relative flex flex-col">
       {/* GitHub Star Button */}
       <GitHubStarButton />
 
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6 py-12 flex-1 flex flex-col">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <h1 className="text-6xl md:text-7xl font-black text-gray-800 mb-6 tracking-tight">
             Widgetyy
           </h1>
@@ -204,8 +204,8 @@ const ModernHomePage = () => {
           </p>
         </div>
 
-        {/* Slider Container - Added overflow-hidden to remove scrollbar */}
-        <div className="relative max-w-6xl mx-auto overflow-hidden">
+        {/* Slider Container - Centered vertically */}
+        <div className="relative max-w-6xl mx-auto overflow-hidden flex-1 flex flex-col justify-center">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -250,13 +250,13 @@ const ModernHomePage = () => {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="text-center mt-20">
-          <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>Live updates every minute</span>
-          </div>
+      {/* Bottom Footer - Live Updates */}
+      <div className="text-center mt-auto pb-6">
+        <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span>Live updates every minute</span>
         </div>
       </div>
     </div>
