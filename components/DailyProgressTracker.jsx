@@ -75,7 +75,7 @@ const DailyProgressTracker = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-2xl p-8 shadow-lg w-96">
+      <div className="bg-white rounded-2xl p-8 shadow-lg w-[480px]">
         {/* Top row: Today (left) and Percentage (right) */}
         <div className="flex justify-between items-center mb-8">
           <div className="text-sm font-medium text-gray-600">Today</div>
@@ -83,18 +83,22 @@ const DailyProgressTracker = () => {
         </div>
 
         {/* Middle: Diamonds with maximum space */}
-        <div className="grid grid-cols-6 gap-3 w-fit mx-auto mb-15">
+        <div className="grid grid-cols-6 gap-[22px] w-fit mx-auto mb-15">
           {diamonds}
         </div>
 
         {/* Bottom row: Day (left), Time with dot (center), Date (right) */}
-        <div className="flex justify-between items-center text-xs">
-          <div className="text-gray-500">{dayName}</div>
-          <div className="flex items-center text-gray-400">
+        <div className="grid grid-cols-3 items-center text-xs">
+          <div className="text-gray-500 justify-self-start whitespace-nowrap">
+            {dayName}
+          </div>
+          <div className="flex items-center text-gray-400 justify-self-center whitespace-nowrap">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
             {currentTime}
           </div>
-          <div className="text-gray-500">{dateString}</div>
+          <div className="text-gray-500 justify-self-end whitespace-nowrap">
+            {dateString}
+          </div>
         </div>
       </div>
     </div>

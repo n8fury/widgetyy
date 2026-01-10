@@ -84,44 +84,34 @@ const WidgetCard = ({ title, description, href, icon: Icon, progress = 0 }) => {
   return (
     <Link href={href} className="group block">
       <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 h-80 w-72 flex flex-col">
-        {/* Content */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gray-50 rounded-xl group-hover:bg-gray-100 transition-colors">
-                <Icon className="w-6 h-6 text-gray-600" />
-              </div>
-              <div className="text-2xl font-bold text-gray-800">
-                {progress}%
-              </div>
+        {/* Header / Copy */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-3 bg-gray-50 rounded-xl group-hover:bg-gray-100 transition-colors">
+              <Icon className="w-6 h-6 text-gray-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-gray-900 transition-colors">
-              {title}
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {description}
-            </p>
+            <div className="text-2xl font-bold text-gray-800">{progress}%</div>
           </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-gray-900 transition-colors">
+            {title}
+          </h3>
+          <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+        </div>
 
-          {/* Progress Section */}
-          <div className="mt-4">
-            {/* Diamond visualization - centered */}
-            <div className="flex justify-center mb-4">
-              <div className="grid grid-cols-6 gap-2">
-                {Array.from({ length: totalDiamonds }, (_, index) => (
-                  <Diamond key={index} filled={index < filledDiamonds} />
-                ))}
-              </div>
-            </div>
+        {/* Diamonds - vertically centered */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="grid grid-cols-6 gap-2">
+            {Array.from({ length: totalDiamonds }, (_, index) => (
+              <Diamond key={index} filled={index < filledDiamonds} />
+            ))}
+          </div>
+        </div>
 
-            {/* Time indicator */}
-            <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>Track your progress</span>
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse mr-1"></div>
-                <span>Live updates</span>
-              </div>
-            </div>
+        {/* Live updates */}
+        <div className="flex items-center justify-center text-xs text-gray-400">
+          <div className="flex items-center">
+            <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse mr-1"></div>
+            <span>Live updates</span>
           </div>
         </div>
       </div>
@@ -136,32 +126,28 @@ const ModernHomePage = () => {
   const widgets = [
     {
       title: 'Daily Progress',
-      description:
-        "Track your daily journey with real-time updates every minute. See how much of today you've conquered.",
+      description: 'Real-time daily progress, updated every minute.',
       href: '/day_tracker',
       icon: Clock,
       progress: 65,
     },
     {
       title: 'Monthly Progress',
-      description:
-        'Monitor your monthly achievements and milestones. Perfect for tracking monthly goals and habits.',
+      description: 'See your month progress at a glance.',
       href: '/month_tracker',
       icon: Calendar,
       progress: 42,
     },
     {
       title: 'Yearly Progress',
-      description:
-        'Visualize your annual journey. See how much of the year has passed and plan ahead effectively.',
+      description: 'Track the year with a simple overview.',
       href: '/year_tracker',
       icon: TrendingUp,
       progress: 48,
     },
     {
       title: 'Deadline Tracker',
-      description:
-        'Set custom deadlines and track progress toward your most important goals and projects.',
+      description: 'Count down to any custom deadline.',
       href: '/deadline_tracker',
       icon: Target,
       progress: 78,

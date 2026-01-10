@@ -36,8 +36,8 @@ const YearlyProgressTracker = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Create 182 diamonds (26 columns × 7 rows)
-  const totalDiamonds = 182;
+  // Create 120 diamonds (4 rows × 30 columns)
+  const totalDiamonds = 120;
   const filledDiamonds = Math.round((progress / 100) * totalDiamonds);
 
   const diamonds = Array.from({ length: totalDiamonds }, (_, index) => {
@@ -62,26 +62,26 @@ const YearlyProgressTracker = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white rounded-2xl p-12 shadow-lg max-w-6xl w-full">
         {/* Top Row */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div className="text-sm font-medium text-gray-600">This Year</div>
           <div className="text-4xl font-bold text-gray-800">{progress}%</div>
         </div>
 
         {/* Middle - Diamonds */}
         <div className="flex justify-center mb-8">
-          <div className="grid grid-cols-26 gap-5">
-            {diamonds}
-          </div>
+          <div className="grid grid-cols-30 gap-5">{diamonds}</div>
         </div>
 
         {/* Bottom Row */}
-        <div className="flex justify-between items-end">
-          <div className="text-xs text-gray-500">{currentYear}</div>
-          <div className="flex items-center text-xs text-gray-400">
+        <div className="grid grid-cols-3 items-end">
+          <div className="text-xs text-gray-500 justify-self-start">
+            {currentYear}
+          </div>
+          <div className="flex items-center text-xs text-gray-400 justify-self-center">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></div>
             Day {daysElapsed}
           </div>
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-gray-400 justify-self-end">
             Week {weeksElapsed} ({isLeapYear ? 'Leap Year' : 'Regular Year'})
           </div>
         </div>

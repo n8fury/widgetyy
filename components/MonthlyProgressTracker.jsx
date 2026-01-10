@@ -46,7 +46,7 @@ const MonthlyProgressTracker = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Create 30 diamonds (5 columns × 6 rows)
+  // Create 30 diamonds (3 rows × 10 columns)
   const totalDiamonds = 30;
   const filledDiamonds = Math.round((progress / 100) * totalDiamonds);
 
@@ -73,14 +73,14 @@ const MonthlyProgressTracker = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white rounded-2xl p-12 shadow-lg max-w-2xl w-full mx-4">
         {/* Top Row */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div className="text-sm font-medium text-gray-600">This Month</div>
           <div className="text-4xl font-bold text-gray-800">{progress}%</div>
         </div>
 
         {/* Middle - Diamonds */}
         <div className="flex justify-center mb-8">
-          <div className="grid grid-cols-6 gap-5">{diamonds}</div>
+          <div className="grid grid-cols-10 gap-5">{diamonds}</div>
         </div>
 
         {/* Bottom Row */}
