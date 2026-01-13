@@ -1,20 +1,31 @@
 'use client';
 
+import { Calendar, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Clock, Calendar } from 'lucide-react';
 
 const DeadlineProgressTracker = () => {
   const [progress, setProgress] = useState(0);
-  const [customDeadline, setCustomDeadline] = useState('2025-06-12');
-  const [deadlineTitle, setDeadlineTitle] = useState('Test Deadline');
+  // Default to tomorrow
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    // Format manually to avoid timezone issues
+    const year = tomorrow.getFullYear();
+    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const day = String(tomorrow.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  const [customDeadline, setCustomDeadline] = useState(getTomorrowDate());
+  const [deadlineTitle, setDeadlineTitle] = useState('My Deadline');
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
+    seconds: 0,
     type: 'year',
   });
   const [isExpired, setIsExpired] = useState(false);
-  const [customTime, setCustomTime] = useState('00:00');
+  const [customTime, setCustomTime] = useState('12:00');
   const [templateType, setTemplateType] = useState('year');
 
   // Date picker states
@@ -90,14 +101,31 @@ const DeadlineProgressTracker = () => {
       const daysRemaining = msRemaining / (24 * 60 * 60 * 1000);
       const hoursRemaining = msRemaining / (60 * 60 * 1000);
       const minutesRemaining = msRemaining / (60 * 1000);
+      const secondsRemaining = msRemaining / 1000;
 
       let currentTemplateType;
       let startDate;
       let totalMs;
       let elapsedMs;
 
-      // Improved boundary logic
-      if (daysRemaining <= 2) {
+      // Improved boundary logic with hour template for very short deadlines
+      if (hoursRemaining <= 1) {
+        // Less than or equal to 1 hour - use hour template (most granular)
+        currentTemplateType = 'hour';
+        // Start from exactly 1 hour before deadline for clean progress
+        startDate = new Date(deadlineDate.getTime() - 60 * 60 * 1000);
+
+        totalMs = 60 * 60 * 1000; // 1 hour
+        elapsedMs = now.getTime() - startDate.getTime();
+
+        setTimeRemaining({
+          days: 0,
+          hours: 0,
+          minutes: Math.floor(minutesRemaining % 60),
+          seconds: Math.floor(secondsRemaining % 60),
+          type: 'hour',
+        });
+      } else if (daysRemaining <= 2) {
         // Less than or equal to 2 days - use daily template
         currentTemplateType = 'day';
         startDate = new Date(
@@ -123,6 +151,7 @@ const DeadlineProgressTracker = () => {
           days: Math.floor(daysRemaining),
           hours: Math.floor(hoursRemaining % 24),
           minutes: Math.floor(minutesRemaining % 60),
+          seconds: Math.floor(secondsRemaining % 60),
           type: 'day',
         });
       } else if (daysRemaining <= 60) {
@@ -146,6 +175,7 @@ const DeadlineProgressTracker = () => {
           days: Math.floor(daysRemaining),
           hours: Math.floor(hoursRemaining % 24),
           minutes: Math.floor(minutesRemaining % 60),
+          seconds: Math.floor(secondsRemaining % 60),
           type: 'month',
         });
       } else {
@@ -174,8 +204,9 @@ const DeadlineProgressTracker = () => {
 
         setTimeRemaining({
           days: Math.floor(daysRemaining),
-          hours: 0,
-          minutes: 0,
+          hours: Math.floor(hoursRemaining % 24),
+          minutes: Math.floor(minutesRemaining % 60),
+          seconds: Math.floor(secondsRemaining % 60),
           type: 'year',
         });
       }
@@ -198,7 +229,8 @@ const DeadlineProgressTracker = () => {
     };
 
     updateProgress();
-    const interval = setInterval(updateProgress, 60000);
+    // Update every second for real-time countdown
+    const interval = setInterval(updateProgress, 1000);
 
     return () => clearInterval(interval);
   }, [customDeadline, customTime]);
@@ -206,6 +238,8 @@ const DeadlineProgressTracker = () => {
   // Diamond configuration based on template type
   const getDiamondConfig = () => {
     switch (templateType) {
+      case 'hour':
+        return { total: 12, cols: 6, size: 'w-4 h-4', gap: 'gap-5' };
       case 'day':
         return { total: 24, cols: 6, size: 'w-4 h-4', gap: 'gap-5' };
       case 'month':
@@ -277,8 +311,11 @@ const DeadlineProgressTracker = () => {
   };
 
   const handleDateSelect = (day) => {
-    const selectedDate = new Date(currentYear, currentMonth, day);
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    // Format date manually to avoid timezone issues with toISOString()
+    const year = currentYear;
+    const month = String(currentMonth + 1).padStart(2, '0');
+    const dayStr = String(day).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${dayStr}`;
     setCustomDeadline(formattedDate);
     setShowDatePicker(false);
   };
@@ -382,15 +419,21 @@ const DeadlineProgressTracker = () => {
   const getDaysRemaining = () => {
     if (isExpired) return 'Deadline has passed';
 
-    const { days, hours, minutes, type } = timeRemaining;
+    const { days, hours, minutes, seconds, type } = timeRemaining;
 
-    if (type === 'day') {
+    if (type === 'hour') {
+      // For hour template, show minutes and seconds
+      if (minutes > 0) {
+        return `${minutes}m ${seconds}s remaining`;
+      }
+      return `${seconds}s remaining`;
+    } else if (type === 'day') {
       // For daily template, if less than 1 full day remaining, don't show days
       if (days < 1) {
         if (hours > 0) {
-          return `${hours}h ${minutes}m remaining`;
+          return `${hours}h ${minutes}m ${seconds}s remaining`;
         }
-        return `${minutes}m remaining`;
+        return `${minutes}m ${seconds}s remaining`;
       } else {
         return `${days} day${days !== 1 ? 's' : ''} ${hours}h remaining`;
       }
@@ -406,6 +449,8 @@ const DeadlineProgressTracker = () => {
 
   const getTemplateName = () => {
     switch (templateType) {
+      case 'hour':
+        return 'Hour Template';
       case 'day':
         return 'Daily Template';
       case 'month':

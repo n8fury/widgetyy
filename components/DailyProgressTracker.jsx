@@ -4,7 +4,16 @@ import React, { useEffect, useState } from 'react';
 
 const DailyProgressTracker = () => {
   const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState('');
+  const [currentTime, setCurrentTime] = useState({
+    hours: '',
+    minutes: '',
+    secondsTens: '',
+    secondsOnes: '',
+    period: '',
+  });
+  const [prevSeconds, setPrevSeconds] = useState({ tens: '', ones: '' });
+  const [tensKey, setTensKey] = useState(0);
+  const [onesKey, setOnesKey] = useState(0);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -32,18 +41,35 @@ const DailyProgressTracker = () => {
       const dayProgress = Math.round((elapsedMs / totalDayMs) * 100);
       setProgress(Math.min(Math.max(dayProgress, 0), 100));
 
-      // Update current time display
-      setCurrentTime(
-        now.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        })
-      );
+      // Update current time display with seconds
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+
+      const secondsStr = seconds.toString().padStart(2, '0');
+      const newTens = secondsStr[0];
+      const newOnes = secondsStr[1];
+
+      // Only update keys when digits actually change
+      setPrevSeconds((prev) => {
+        if (prev.tens !== newTens) setTensKey((k) => k + 1);
+        if (prev.ones !== newOnes) setOnesKey((k) => k + 1);
+        return { tens: newTens, ones: newOnes };
+      });
+
+      setCurrentTime({
+        hours: displayHours.toString().padStart(2, '0'),
+        minutes: minutes.toString().padStart(2, '0'),
+        secondsTens: newTens,
+        secondsOnes: newOnes,
+        period,
+      });
     };
 
     updateProgress();
-    const interval = setInterval(updateProgress, 60000); // Update every minute
+    const interval = setInterval(updateProgress, 1000); // Update every second
 
     return () => clearInterval(interval);
   }, []);
@@ -102,7 +128,25 @@ const DailyProgressTracker = () => {
           <div></div>
           <div className="flex items-center text-gray-400 justify-self-end whitespace-nowrap">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
-            {currentTime}
+            <span className="tabular-nums">
+              {currentTime.hours}
+              <span className="opacity-70">:</span>
+              {currentTime.minutes}
+              <span className="opacity-70">:</span>
+              <span
+                key={tensKey}
+                className="inline-block animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)]"
+              >
+                {currentTime.secondsTens}
+              </span>
+              <span
+                key={onesKey}
+                className="inline-block animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)]"
+              >
+                {currentTime.secondsOnes}
+              </span>
+            </span>
+            <span className="ml-1">{currentTime.period}</span>
           </div>
         </div>
       </div>
